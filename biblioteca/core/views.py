@@ -4,9 +4,13 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from .models import Livro
 from .serializers import LivroSerializer
-from .serializers import ColecaoSerializerSerializer
-from .custom_permissions import IsColecionador 
+from .serializers import ColecaoSerializer
+from .custom_permissions import IsColecionador
+from rest_framework.authtoken.views import obtain_auth_token
 from django.http import JsonResponse
+#from rest_framework.authtoken.views import ObtainAuthToken
+
+
 
 @api_view(['GET', 'POST'])
 def livro_list_create(request):
@@ -54,7 +58,7 @@ from .serializers import ColecaoSerializer
 from drf_spectacular.utils import extend_schema
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 @extend_schema(
     description="Lista todas as coleções e cria uma nova coleção.",
     responses={
@@ -64,17 +68,17 @@ from drf_spectacular.utils import extend_schema
 )
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])  # Apenas usuários autenticados podem acessar essas views
+#@permission_classes([IsAuthenticated])  # Apenas usuários autenticados podem acessar essas views
 def ColecaoListCreate(request):
-    # Listando as coleções
+    # Listan das coleções
     if request.method == 'GET':
         colecoes = Colecao.objects.all()
         serializer = ColecaoSerializer(colecoes, many=True)
         return Response(serializer.data)
 
-    # Criando uma nova coleção
+    # Criar uma nova coleção
     elif request.method == 'POST':
-        # Garantir que o usuário autenticado seja o colecionador
+        # Garante que o usuário autenticado seja o colecionador
         request.data['colecionador'] = request.user.id
         serializer = ColecaoSerializer(data=request.data)
         if serializer.is_valid():
@@ -82,7 +86,7 @@ def ColecaoListCreate(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@permission_classes([IsAuthenticated]) 
+#@permission_classes([IsAuthenticated]) 
 def ColecaoDetail(request, pk):
     try:
         colecao = Colecao.objects.get(pk=pk)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Categoria, Autor, Livro
+from .models import Categoria, Autor, Livro, Colecao
 
 class CategoriaSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)

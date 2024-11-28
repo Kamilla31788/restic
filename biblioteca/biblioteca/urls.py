@@ -15,18 +15,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from . import views
+from core.views import livro_list_create, livro_detail, ColecaoListCreate,ColecaoDetail,obtain_auth_token
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from django.urls import include, path
+
+
 urlpatterns = [
-    path('livros/', views.livro_list_create, name='livros-list-create'),
-    path('livros/<int:pk>/', views.livro_detail, name='livro-detail'),
-    path('colecao/', views.ColecaoListCreate, name='colecao_list_create'),
-    path('colecao/<int:pk>/', views.ColecaoDetail, name='colecao_detail'),
-    path('colecao/', views.ColecaoListCreate, name='colecao_list_create'),
-    path('colecao/<int:pk>/', views.ColecaoDetail, name='colecao_detail'),
+    path('livros/',livro_list_create, name='livros-list-create'),
+    path('livros/<int:pk>/',livro_detail, name='livro-detail'),
+    path('colecao/',ColecaoListCreate, name='colecao_list_create'),
+    path('colecao/<int:pk>/',ColecaoDetail, name='colecao_detail'),
+    path('colecao/',ColecaoListCreate, name='colecao_list_create'),
+    path('colecao/<int:pk>/',ColecaoDetail, name='colecao_detail'),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    
 
     # Documentação da API
     path('schema/', SpectacularAPIView.as_view(), name='schema'),  # Endpoint para gerar o schema OpenAPI
     path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger'),  # Visualizar a documentação interativa 
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
 ]

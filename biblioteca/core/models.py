@@ -1,5 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings  
+from django.contrib.auth.models import AbstractUser
+
 
 class Categoria(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -18,8 +20,8 @@ class Autor(models.Model):
 
 class Livro(models.Model):
     titulo = models.CharField(max_length=100, unique=True)
-    autor = models.ForeignKey("Autor", related_name="livros", on_delete=models.CASCADE)
-    categoria = models.ForeignKey("Categoria", related_name="livros", on_delete=models.CASCADE)
+    autor = models.ForeignKey(Autor, related_name="livros", on_delete=models.CASCADE)
+    categoria = models.ForeignKey(Categoria, related_name="livros", on_delete=models.CASCADE)
     publicado_em = models.DateField()
 
     def __str__(self):
@@ -29,8 +31,8 @@ class Livro(models.Model):
 class Colecao(models.Model):
     nome = models.CharField(max_length=100, unique=True)
     descricao = models.TextField(blank=True)
-    livros = models.ManyToManyField("Livro", related_name="colecoes")
-    colecionador = models.ForeignKey("User", on_delete=models.CASCADE, related_name="colecoes")
+    livros = models.ManyToManyField(Livro, related_name="colecoes")
+    colecionador = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="colecoes")
 
     def __str__(self):
         return f"{self.nome} - {self.colecionador.username}"
