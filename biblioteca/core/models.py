@@ -1,29 +1,36 @@
-from core.models import Categoria, Autor, Livro
-from datetime import date
-# Criando categorias
-ficcao = Categoria.objects.create(nome='Ficção')
-ciencia = Categoria.objects.create(nome='Ciência')
-# Criando autores
-asimov = Autor.objects.create(nome='Isaac Asimov')
-sagan = Autor.objects.create(nome='Carl Sagan')
-# Criando livros
-Livro.objects.create(titulo='Fundação', autor=asimov,
-categoria=ficcao, publicado_em=date(1951, 6, 1))
-Livro.objects.create(titulo='Cosmos', autor=sagan, categoria=ciencia,
-publicado_em=date(1980, 10, 1))
-# Verificar categorias
-print(Categoria.objects.all())
+from django.db import models
+from django.contrib.auth.models import User
 
-# Verificar autores
-print(Autor.objects.all())
+class Categoria(models.Model):
+    name = models.CharField(max_length=100, unique=True)
 
-# Verificar livros
-print(Livro.objects.all())
-ficcao_livros = Livro.objects.filter(categoria__nome='Ficção')
-for livro in ficcao_livros:
- print(livro.titulo)
-fundacao = Livro.objects.get(titulo='Fundação')
-fundacao.titulo = 'Fundação - Edição Revisada'
-fundacao.save()
-cosmos = Livro.objects.get(titulo='Cosmos')
-cosmos.delete()
+    def __str__(self):
+        return self.name
+
+
+class Autor(models.Model):
+    name = models.CharField(max_length=100)
+    birth_date = models.DateField()
+
+    def __str__(self):
+        return self.name
+
+
+class Livro(models.Model):
+    titulo = models.CharField(max_length=100, unique=True)
+    autor = models.ForeignKey("Autor", related_name="livros", on_delete=models.CASCADE)
+    categoria = models.ForeignKey("Categoria", related_name="livros", on_delete=models.CASCADE)
+    publicado_em = models.DateField()
+
+    def __str__(self):
+        return self.titulo
+
+
+class Colecao(models.Model):
+    nome = models.CharField(max_length=100, unique=True)
+    descricao = models.TextField(blank=True)
+    livros = models.ManyToManyField("Livro", related_name="colecoes")
+    colecionador = models.ForeignKey("User", on_delete=models.CASCADE, related_name="colecoes")
+
+    def __str__(self):
+        return f"{self.nome} - {self.colecionador.username}"

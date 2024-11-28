@@ -42,3 +42,11 @@ class LivroSerializer(serializers.Serializer):
         instance.publicado_em = validated_data.get('publicado_em', instance.publicado_em)
         instance.save()
         return instance
+
+
+class ColecaoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Colecao
+        fields = ['id', 'nome', 'descricao', 'livros', 'colecionador']  # Inclua o campo 'colecionador'
+        read_only_fields = ['colecionador']  # O colecionador será lido apenas e não modificado diretamente
+
