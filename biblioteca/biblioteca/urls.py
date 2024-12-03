@@ -18,9 +18,13 @@ from django.urls import path
 from core.views import livro_list_create, livro_detail, ColecaoListCreate,ColecaoDetail,obtain_auth_token
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from django.urls import include, path
+from django.http import HttpResponse 
 
+def home(request):
+    return HttpResponse("Bem-vindo à API da Biblioteca!")
 
 urlpatterns = [
+    path('', home),
     path('livros/',livro_list_create, name='livros-list-create'),
     path('livros/<int:pk>/',livro_detail, name='livro-detail'),
     path('colecao/',ColecaoListCreate, name='colecao_list_create'),

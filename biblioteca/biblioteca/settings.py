@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'core',
     'rest_framework.authtoken',
     'drf_spectacular',
-    'users',
+
 ]
 
 MIDDLEWARE = [
@@ -189,4 +189,5 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 
-AUTH_USER_MODEL = 'app_name.CustomUser'
+AUTH_USER_MODEL = 'core.CustomUser'
+

@@ -36,3 +36,11 @@ class Colecao(models.Model):
 
     def __str__(self):
         return f"{self.nome} - {self.colecionador.username}"
+
+
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+class CustomUser(AbstractUser):
+    bio = models.TextField(null=True, blank=True)  # Exemplo de campo extra
+
